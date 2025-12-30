@@ -1,0 +1,63 @@
+const {Model, DataTypes} =require('sequelize');
+
+module.exports = (sequelize)    => {
+  class Customer extends Model {}
+    Customer.init(
+        {
+            customerId:{
+                type:DataTypes.INTEGER,
+                autoIncrement:true,
+                primaryKey:true,
+            },
+            customerName:{
+                type:DataTypes.STRING,
+                allowNull:false,
+            },
+            customerEmail:{
+                type:DataTypes.STRING,
+                allowNull:false,
+                unique:true,
+                validate:{isEmail:true,},
+            },
+            customerPhone:{
+                type:DataTypes.STRING,
+                allowNull:true,
+            },
+            customerAddress:{
+                type:DataTypes.STRING,
+                allowNull:true,
+            },
+            planManagerName:{
+                type:DataTypes.STRING,
+                allowNull:true,     
+            },
+            planManagerEmail:{
+                type:DataTypes.STRING,
+                allowNull:true,     
+            },
+            planManagerPhone:{
+                type:DataTypes.STRING,
+                allowNull:true,         
+            },
+            emailRecipient1:{
+                type:DataTypes.STRING,
+                allowNull:true,         
+            },
+            emailRecipient2:{
+                type:DataTypes.STRING,
+                allowNull:true,         
+            },
+            emailRecipient3:{
+                type:DataTypes.STRING,
+                allowNull:true,
+            },
+        },
+        {
+            sequelize,
+            modelName:"Customer",
+            tableName:"customers",
+            timestamps:false,
+        }
+    );
+    return Customer;
+};
