@@ -15,6 +15,7 @@ const sequelize = new Sequelize(
 const User = require("./user.model")(sequelize);
 const Order = require("./order.model")(sequelize);
 const Customer = require("./customer.model")(sequelize);
+const EmailLog = require("./emailLogs")(sequelize);
 
 // Define associations if any
 //User.hasMany(Order, { foreignKey: "userId" });
@@ -34,4 +35,4 @@ Object.values(sequelize.models).forEach((model) => {
 Customer.hasMany(Order,{foreignKey:"customerId"});
 Order.belongsTo(Customer,{foreignKey:"customerId"});
 
-module.exports = { sequelize, User, Order ,Customer};
+module.exports = { sequelize, User, Order ,Customer, EmailLog};
