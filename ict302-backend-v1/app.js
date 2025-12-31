@@ -6,7 +6,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth.routes");
 const orderRoutes = require("./routes/order.routes");
 const userMgmtRoutes = require("./routes/user-mgmt.routes");
-
+const emailRoutes = require("./routes/emailRoutes");
 // -----------------------------
 // MIDDLEWARES
 // -----------------------------
@@ -23,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/customers", require("./routes/customer.routes"));
 app.use("/api/admin/users", userMgmtRoutes);
+app.use("/api/emails", emailRoutes);
 
 
  

@@ -14,7 +14,6 @@ const sequelize = new Sequelize(
 
 const User = require("./user.model")(sequelize);
 const Order = require("./order.model")(sequelize);
-const EmailActivity = require("./emailactivity.model")(sequelize);
 const Customer = require("./customer.model")(sequelize);
 
 // Define associations if any
@@ -29,10 +28,10 @@ Object.values(sequelize.models).forEach((model) => {
   }
 });
 
-User.hasMany(EmailActivity, { foreignKey: "userId" });
-EmailActivity.belongsTo(User, { foreignKey: "userId" });  
+//User.hasMany(EmailActivity, { foreignKey: "userId" });
+//EmailActivity.belongsTo(User, { foreignKey: "userId" });  
 
 Customer.hasMany(Order,{foreignKey:"customerId"});
 Order.belongsTo(Customer,{foreignKey:"customerId"});
 
-module.exports = { sequelize, User, Order, EmailActivity ,Customer};
+module.exports = { sequelize, User, Order ,Customer};
