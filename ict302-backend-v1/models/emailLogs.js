@@ -1,7 +1,14 @@
-module.exports = (sequelize, DataTypes) => {
-  const EmailLog = sequelize.define(
-    "EmailLog",
+const {Model, DataTypes} = require("sequelize");
+
+module.exports = (sequelize) => {
+  class EmailLog extends Model {}
+  EmailLog.init(
     {
+      logId:{
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,       
+      },
       to: { type: DataTypes.STRING, allowNull: false },
       subject: { type: DataTypes.STRING, allowNull: false },
       templateName: { type: DataTypes.STRING, allowNull: true },
@@ -9,8 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       error: { type: DataTypes.TEXT, allowNull: true },
     },
     {
+      sequelize,
+      modelName: "EmailLog",
       tableName: "email_logs",
-      timestamps: true,
+      timestamps: false,
     }
   );
 
