@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const pool = require("../config/db");
+const {EmailLog} = require("../models");
 require("dotenv").config();
 
 let transporterPromise = null;
@@ -32,12 +32,13 @@ async function getTransporter() {
 }
 
 async function logEmail({ to, subject, templateName, status, error, previewUrl }) {
-  await pool.query(
-    `INSERT INTO email_logs 
-     (recipient_email, subject, template_name, status, error_message)
-     VALUES (?, ?, ?, ?, ?)`,
-    [to, subject, templateName || null, status, error || previewUrl || null]
-  );
+  await EmailLog.create({
+    to,
+    subject,
+    templateName,
+    status,
+    error: error || previewUrl || null,
+  });
 }
 
 async function sendEmail({ to, subject, body, templateName }) {
