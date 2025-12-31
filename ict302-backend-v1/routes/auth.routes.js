@@ -8,7 +8,7 @@ const adminOnly = [authMiddleware, roleMiddleware(["admin"])];
 
 const authController = require("../controllers/auth.controller");
 
-// Register user (admin-only example)
+// Register user 
 router.post( "/register", adminOnly, authController.register);
 router.post( "/login", authController.login);
 module.exports = router;
