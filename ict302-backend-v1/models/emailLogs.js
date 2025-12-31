@@ -14,6 +14,11 @@ module.exports = (sequelize) => {
       templateName: { type: DataTypes.STRING, allowNull: true },
       status: { type: DataTypes.STRING, allowNull: false }, // SENT / FAILED
       error: { type: DataTypes.TEXT, allowNull: true },
+      sendAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
     },
     {
       sequelize,

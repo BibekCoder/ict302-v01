@@ -40,6 +40,7 @@ exports.sendSingleEmail = async (req, res) => {
       to,
       subject,
       templateName,
+      sendAt: new Date(),
       previewUrl: result.previewUrl, // Ethereal preview link
     });
   } catch (err) {
