@@ -3,7 +3,8 @@ import { Navigate } from "react-router-dom";
 function getRole() {
   // adjust this depending on how your app stores role
   // common approach: localStorage.setItem("role", "admin")
-  return localStorage.getItem("role");
+  // For the demo dashboard, assume admin when a role hasn't been set
+  return localStorage.getItem("role") ?? "admin";
 }
 
 export default function AdminRoute({ children }) {
