@@ -1,6 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TopBar from "./components/TopBar";
 import AdminRoute from "./routes/AdminRoute";
+import Orders from "./components/Orders";
+import Activities from "./components/Activities";
+import OrderDetails from "./components/OrderDetails";
+import Login from "./pages/Login";
+import Unauthorized from "./pages/Unauthorized";
 
 import CustomizeTemplatesPage from "./pages/admin/CustomizeTemplatesPage";
 import EmailTemplatesPage from "./pages/admin/EmailTemplatesPage";
@@ -26,17 +31,21 @@ function Placeholder({ title }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <TopBar />
-
-     <Routes>
-  <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+    <>
+  <TopBar />
+  <Routes>
+     
+  <Route path="/" element={<Navigate to="/login" replace />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/unauthorized" element={<Unauthorized />} />
 
   <Route path="/admin/dashboard" element={<AdminRoute><>
                     <h1>Dashboard</h1>
                     <Orders/>
                     <Activities/>
                     </></AdminRoute>} />
+
+  <Route path="/order/:id" element={<AdminRoute><OrderDetails /></AdminRoute>} />
                     
   <Route path="/admin/users" element={<AdminRoute><UsersPage /></AdminRoute>} />
   <Route path="/admin/activity" element={<AdminRoute><ActivityLogsPage /></AdminRoute>} />
@@ -52,9 +61,10 @@ export default function App() {
   <Route path="/admin/settings/shipping" element={<AdminRoute><ShippingPage /></AdminRoute>} />
   <Route path="/admin/settings/api" element={<AdminRoute><ApiAccessPage /></AdminRoute>} />
 
-  <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
+  <Route path="*" element={<Navigate to="/login" replace />} />
 </Routes>
 
-    </BrowserRouter>
+</>
+    
   );
 }
