@@ -19,6 +19,11 @@ body{
   background:var(--bg);
 }
 
+h1{
+  padding-left: 10px;
+  font-size: 32px;
+}
+
 a{ color:inherit; text-decoration:none; }
 a:hover{ text-decoration:underline; }
 
@@ -447,6 +452,8 @@ a:hover{ text-decoration:underline; }
   display: flex;
   justify-content: space-between;
   margin-top: 30px;
+  margin-left: 10px;
+  
 }
 
 .grid {
@@ -454,6 +461,7 @@ a:hover{ text-decoration:underline; }
   grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
   gap: 25px;
   margin-top: 15px;
+  
 }
 .details-card {
   background: white;
@@ -507,5 +515,32 @@ a:hover{ text-decoration:underline; }
   font-size: 16px;
   color: white;
 }
+.card {
+  background: white;
+  padding: 25px;
+  border: 1px solid red;
+  border-radius: 8px;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.05);
+}
+.status {
+  color: gray;
+}
+
+button {
+  margin-top: 10px;
+  background: black;
+  color: white;
+  border: none;
+  padding: 8px 25px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.view-all {
+  color: blue;
+  text-decoration: underline;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 
 
