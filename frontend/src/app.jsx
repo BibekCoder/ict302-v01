@@ -32,7 +32,12 @@ export default function App() {
      <Routes>
   <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
 
-  <Route path="/admin/dashboard" element={<AdminRoute><DashboardPage /></AdminRoute>} />
+  <Route path="/admin/dashboard" element={<AdminRoute><>
+                    <h1>Dashboard</h1>
+                    <Orders/>
+                    <Activities/>
+                    </></AdminRoute>} />
+                    
   <Route path="/admin/users" element={<AdminRoute><UsersPage /></AdminRoute>} />
   <Route path="/admin/activity" element={<AdminRoute><ActivityLogsPage /></AdminRoute>} />
 
