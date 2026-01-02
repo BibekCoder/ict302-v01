@@ -15,7 +15,13 @@ const emailRoutes = require("./routes/emailRoutes");
 app.use(express.json());
 
 // Allow requests from frontend (React, Vue, etc.)
-app.use(cors());
+app.use(cors(
+  {
+    origin:"http://localhost:5173",
+    methods:["GET","POST","PUT","DELETE"],
+    credentials:true,
+  }
+));
 
 
 // ROUTES HOOKING
