@@ -15,7 +15,8 @@ export default function Orders() {
         {orders.map((id) => (
           <div className="card" key={id}>
             <h3>Order {id}</h3>
-            <p className="status">Payment Status: Completed</p>
+            <p className="status">Customer Name: Ram Sharma</p>
+             <p> Total Price: 50</p>
             <button onClick={()=> navigate(`/order/${id}`)}>See Details</button>
           </div>
         ))}
