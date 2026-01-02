@@ -1,50 +1,49 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { fetchOrderById } from "../api/orders";
 
 export default function OrderDetails() {
-  const navigate = useNavigate();
   const { id } = useParams();
+  const [order, setOrder] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+
+    (async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const data = await fetchOrderById(id); // returns order object directly
+        if (alive) setOrder(data);
+      } catch (e) {
+        if (alive) setError(e.message || "Failed to load order");
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, [id]);
+
+  if (loading) return <div className="card">Loading order…</div>;
+  if (error) return <div className="card">Error: {error}</div>;
+  if (!order) return <div className="card">No order found.</div>;
 
   return (
-    <div className="details-card">
-      <button className="back" onClick={() => navigate(-1)}>←</button>
-
-      <h2>Order Details</h2>
-
-      <div className="details-grid">
-        <div className="box">
-          <p>Order ID: <b>#{id}</b></p>
-          <p>Order Date: <b>October 5, 2023</b></p>
-          <p>Payment Status: <b>Completed</b></p>
-          <p>Delivery Address: <b>24 Albert Street, Hornsby NSW</b></p>
-        </div>
-
-        <div className="box">
-          <p>Customer ID: <b>CUST7890</b></p>
-          <p>Customer Name: <b>Bibek</b></p>
-          <p>Email: <b>bibekbamjan405@gmail.com</b></p>
-          <p>Plan Manager: <b>Dikes</b></p>
-          <p>Manager Email: <b>dikesbamjanmg@gmail.com</b></p>
-        </div>
-      </div>
-
-      <div className="box">
-        <h4>Order Items</h4>
-        <ul>
-          <li>1 pc Comfy Pants</li>
-          <li>1 pc XL Side Fastening Pants</li>
-          <li>1 pc The Comfy Long Sleeve Top</li>
-        </ul>
-      </div>
-
-      <div className="box">
-        <h4>Other Instructions</h4>
-        <p>Please deliver in front of the front door</p>
-      </div>
-
-      <div className="actions">
-        <button className="approve">Approve this order</button>
-        <button className="reject">Don't Approve</button>
-      </div>
+    <div className="container">
+      <h2>Order #{order.orderId}</h2>
+      <p>Status: {order.status}</p>
+      <p>Product: {order.productName}</p>
+      <p>Quantity: {order.quantity}</p>
+      <p>Total: ${order.totalPrice}</p>
+      <p>Notes: {order.orderNotes || "-"}</p>
+      <p>Date: {order.orderDate ? new Date(order.orderDate).toLocaleString() : "-"}</p>
     </div>
   );
 }
+
+

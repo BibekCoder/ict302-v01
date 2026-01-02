@@ -1,26 +1,118 @@
-import { useNavigate } from "react-router-dom";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
-export default function Login() {
-  const navigate = useNavigate();
+const API_BASE= import.meta.env.VITE_API_BASE_URL;
 
-  function loginAsAdmin() {
-    localStorage.setItem("role", "admin");
-    navigate("/admin/dashboard");
+export default function Login(){
+  const navigate= useNavigate();
+
+  const [email, setEmail]= useState("");
+  const [password, setPassword]= useState("");
+  const [loading,setLoading]= useState(false);
+  const [error, setError]= useState("");
+
+  async function handleSubmit(e){
+    e.preventDefault();
+    setError("");
+
+    if (!email || !password){
+      setError("Email and password are required.");
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      const res= await fetch(`${API_BASE}/api/auth/login`,{
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({email, password}),
+      });
+
+      if (!res.ok){
+        const data = await res.json().catch(()=> ({}));
+        throw new Error(data.message || `Login failed (${res.status})`);
+      }
+
+      const data= await res.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.role); // Store user role
+     
+      if (data.role === "admin"){
+        navigate("/admin/dashboard");
+      }else{
+        navigate("/")
+      }
+  }catch (err){
+    setError(err.message);
+
+  }finally{
+    setLoading(false);
   }
+}
 
-  function loginAsSupport() {
-    localStorage.setItem("role", "support");
-    navigate("/admin/dashboard");
-  }
+return (
+    <div style={styles.page}>
+      <form onSubmit={handleSubmit} style={styles.card}>
+        <h2>Admin Login</h2>
 
-  return (
-    <div style={{ padding: "40px", textAlign: "center" }}>
-      <h1>Login</h1>
-      <p>Choose a role for demo</p>
+        {error && <p style={styles.error}>{error}</p>}
 
-      <button onClick={loginAsAdmin}>Login as Admin</button>
-      <br /><br />
-      <button onClick={loginAsSupport}>Login as Support</button>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={styles.input}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={styles.input}
+        />
+
+        <button disabled={loading} style={styles.button}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </form>
     </div>
   );
 }
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#f5f5f5",
+  },
+  card: {
+    width: "300px",
+    padding: "25px",
+    background: "#fff",
+    borderRadius: "8px",
+    boxShadow: "0 0 10px rgba(0,0,0,.1)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
+  input: {
+    padding: "10px",
+    fontSize: "16px",
+  },
+  button: {
+    padding: "10px",
+    fontSize: "16px",
+    background: "#1976d2",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+  },
+  error: {
+    color: "red",
+    fontSize: "14px",
+  },
+};

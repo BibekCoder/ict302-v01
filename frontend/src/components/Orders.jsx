@@ -1,9 +1,37 @@
-
-import {useNavigate} from "react-router-dom";
-const orders = [3001, 3002, 3003, 3004, 3005, 3006];
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { fetchOrders } from "../api/orders";
 
 export default function Orders() {
   const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+
+    (async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const data = await fetchOrders(); // { count, orders }
+        if (alive) setOrders(data.orders ?? []);
+      } catch (e) {
+        if (alive) setError(e.message || "Failed to load orders");
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  if (loading) return <div className="card">Loading orders…</div>;
+  if (error) return <div className="card">Error: {error}</div>;
+
   return (
     <div>
       <div className="section-header">
@@ -12,15 +40,26 @@ export default function Orders() {
       </div>
 
       <div className="grid">
-        {orders.map((id) => (
-          <div className="card" key={id}>
-            <h3>Order {id}</h3>
-            <p className="status">Customer Name: Ram Sharma</p>
-             <p> Total Price: 50</p>
-            <button onClick={()=> navigate(`/order/${id}`)}>See Details</button>
+        {orders.map((order) => (
+          <div className="card" key={order.orderId}>
+            <h3>Order {order.orderId}</h3>
+            <p className="status">Status: {order.status}</p>
+            <p>Total: ${order.totalPrice}</p>
+            <button onClick={() => navigate(`/order/${order.orderId}`)}>
+              See Details
+            </button>
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
