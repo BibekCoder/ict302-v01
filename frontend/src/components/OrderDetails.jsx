@@ -42,6 +42,25 @@ export default function OrderDetails() {
       <p>Total: ${order.totalPrice}</p>
       <p>Notes: {order.orderNotes || "-"}</p>
       <p>Date: {order.orderDate ? new Date(order.orderDate).toLocaleString() : "-"}</p>
+
+      <br>
+      </br>
+
+      <h3>Customer Details</h3>
+      <p>CustomerId: {order.Customer?.customerId || "-"}</p>
+      <p>Name: {order.Customer?.customerName || "-"}</p>
+      <p>Email: {order.Customer?.customerEmail || "-"}</p>
+      <p>Phone: {order.Customer?.customerPhone || "-"}</p>
+      <p>Address: {order.Customer?.customerAddress || "-"}</p>
+      <br></br>
+
+      <p>Plan Manager Name: {order.Customer?.planManagerName || "-"}  </p>
+      <p>Plan Manager Email: {order.Customer?.planManagerEmail || "-"}  </p>
+      <p>Plan Manager Phone: {order.Customer?.planManagerPhone || "-"}  </p> 
+      <p>Additional Email Recipients: {order.Customer?.emailRecipient1 || "-"},
+        {order.Customer?.emailRecipient2 || "-"}, {order.Customer?.emailRecipient3 || "-"}
+        </p> 
+
     </div>
   );
 }

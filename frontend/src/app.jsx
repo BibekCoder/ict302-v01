@@ -6,6 +6,7 @@ import Activities from "./components/Activities";
 import OrderDetails from "./components/OrderDetails";
 import Login from "./pages/Login";
 import Unauthorized from "./pages/Unauthorized";
+import ProtectedLayout from "./layouts/ProtectedLayout";
 
 import CustomizeTemplatesPage from "./pages/admin/CustomizeTemplatesPage";
 import EmailTemplatesPage from "./pages/admin/EmailTemplatesPage";
@@ -31,40 +32,45 @@ function Placeholder({ title }) {
 
 export default function App() {
   return (
-    <>
-  <TopBar />
+ <>     
   <Routes>
-     
+  
+  {/* Public */}
   <Route path="/" element={<Navigate to="/login" replace />} />
   <Route path="/login" element={<Login />} />
   <Route path="/unauthorized" element={<Unauthorized />} />
 
-  <Route path="/admin/dashboard" element={<AdminRoute><>
-                    <h1>Dashboard</h1>
-                    <Orders/>
-                    <Activities/>
-                    </></AdminRoute>} />
+  {/*Protected Admin Routes */}
+  <Route element={<AdminRoute><ProtectedLayout /></AdminRoute>}>
 
-  <Route path="/order/:id" element={<AdminRoute><OrderDetails /></AdminRoute>} />
-                    
-  <Route path="/admin/users" element={<AdminRoute><UsersPage /></AdminRoute>} />
-  <Route path="/admin/activity" element={<AdminRoute><ActivityLogsPage /></AdminRoute>} />
+      <Route path="/admin/dashboard" element={<AdminRoute><>
+                        <h1>Dashboard</h1>
+                        <Orders/>
+                        <Activities/>
+                        </></AdminRoute>} />
 
-  <Route path="/admin/settings" element={<AdminRoute><SettingsGeneralPage /></AdminRoute>} />
-  <Route path="/admin/settings/credentials" element={<AdminRoute><EmailConfigPage /></AdminRoute>} />
+      <Route path="/order/:id" element={<AdminRoute><OrderDetails /></AdminRoute>} />
+                        
+      <Route path="/admin/users" element={<AdminRoute><UsersPage /></AdminRoute>} />
+      <Route path="/admin/activity" element={<AdminRoute><ActivityLogsPage /></AdminRoute>} />
 
-  <Route path="/admin/settings/templates" element={<AdminRoute><CustomizeTemplatesPage /></AdminRoute>} />
-  <Route path="/admin/settings/templates/email" element={<AdminRoute><EmailTemplatesPage /></AdminRoute>} />
-  <Route path="/admin/settings/templates/invoice" element={<AdminRoute><InvoiceTemplatesPage /></AdminRoute>} />
+      <Route path="/admin/settings" element={<AdminRoute><SettingsGeneralPage /></AdminRoute>} />
+      <Route path="/admin/settings/credentials" element={<AdminRoute><EmailConfigPage /></AdminRoute>} />
 
-  <Route path="/admin/settings/payment" element={<AdminRoute><PaymentTaxesPage /></AdminRoute>} />
-  <Route path="/admin/settings/shipping" element={<AdminRoute><ShippingPage /></AdminRoute>} />
-  <Route path="/admin/settings/api" element={<AdminRoute><ApiAccessPage /></AdminRoute>} />
+      <Route path="/admin/settings/templates" element={<AdminRoute><CustomizeTemplatesPage /></AdminRoute>} />
+      <Route path="/admin/settings/templates/email" element={<AdminRoute><EmailTemplatesPage /></AdminRoute>} />
+      <Route path="/admin/settings/templates/invoice" element={<AdminRoute><InvoiceTemplatesPage /></AdminRoute>} />
 
+      <Route path="/admin/settings/payment" element={<AdminRoute><PaymentTaxesPage /></AdminRoute>} />
+      <Route path="/admin/settings/shipping" element={<AdminRoute><ShippingPage /></AdminRoute>} />
+      <Route path="/admin/settings/api" element={<AdminRoute><ApiAccessPage /></AdminRoute>} />
+
+  </Route>
+
+  {/*Default routes*/}
   <Route path="*" element={<Navigate to="/login" replace />} />
 </Routes>
 
-</>
-    
+</> 
   );
-}
+} 

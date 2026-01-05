@@ -42,7 +42,9 @@ export default function Orders() {
       <div className="grid">
         {orders.map((order) => (
           <div className="card" key={order.orderId}>
-            <h3>Order {order.orderId}</h3>
+            <h3>Order #{order.orderId}</h3>
+            <p>Customer: {order.Customer?.customerName ?? "-"}</p>
+            <p>CustomerEmail: {order.Customer?.customerEmail ?? "-"}</p>
             <p className="status">Status: {order.status}</p>
             <p>Total: ${order.totalPrice}</p>
             <button onClick={() => navigate(`/order/${order.orderId}`)}>

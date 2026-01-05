@@ -109,6 +109,7 @@ exports.getAllOrders = async (req, res) => {
     console.log("Order model fields:", Object.keys(Order.rawAttributes));
 
     const orders = await Order.findAll({
+      include:[{model:Customer, attributes:["customerId","customerName","customerEmail","customerPhone","customerAddress","planManagerName","planManagerEmail","planManagerPhone","emailRecipient1","emailRecipient2","emailRecipient3" ]}],
       order: [["orderDate", "DESC"]], // newest first
     });
 
@@ -135,7 +136,9 @@ exports.getOrderById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const order = await Order.findByPk(id);
+    const order = await Order.findByPk(id,{
+      include:[{model:Customer, attributes:["customerId","customerName","customerEmail","customerPhone","customerAddress","planManagerName","planManagerEmail","planManagerPhone","emailRecipient1","emailRecipient2","emailRecipient3"  ]}],
+    });
 
     if (!order) {
       return res.status(404).json({
