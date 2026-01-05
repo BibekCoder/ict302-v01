@@ -34,13 +34,14 @@ export default function Login(){
       }
 
       const data= await res.json();
+      localStorage.setItem("email", JSON.stringify(data.email));
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role); // Store user role
      
       if (data.role === "admin"){
         navigate("/admin/dashboard");
       }else{
-        navigate("/")
+        navigate("/unauthorized")
       }
   }catch (err){
     setError(err.message);
