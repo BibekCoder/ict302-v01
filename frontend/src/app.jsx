@@ -1,12 +1,18 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TopBar from "./components/TopBar";
 import AdminRoute from "./routes/AdminRoute";
-import Orders from "./components/Orders";
+import OrdersAdminDash from "./components/OrdersAdminDash";
 import Activities from "./components/Activities";
 import OrderDetails from "./components/OrderDetails";
 import Login from "./pages/Login";
 import Unauthorized from "./pages/Unauthorized";
 import ProtectedLayout from "./layouts/ProtectedLayout";
+
+import ordersDetailsSupport from "./components/orderDetailsSupport";
+import EmailModal from "./components/EmailModal";
+import SupportRoute from "./routes/SupportRoute";
+import SupportDashboard from "./pages/support/SupportDashboard";
+import OrderTable from "./components/OrderTable";
 
 import CustomizeTemplatesPage from "./pages/admin/CustomizeTemplatesPage";
 import EmailTemplatesPage from "./pages/admin/EmailTemplatesPage";
@@ -19,6 +25,7 @@ import PaymentTaxesPage from "./pages/admin/PaymentTaxesPage";
 import ShippingPage from "./pages/admin/ShippingPage";
 import ApiAccessPage from "./pages/admin/ApiAccessPage";
 import InvoiceTemplatesPage from "./pages/admin/InvoiceTemplatesPage";
+import Orders from "./components/OrdersAdminDash";
 
 
 function Placeholder({ title }) {
@@ -45,7 +52,7 @@ export default function App() {
 
       <Route path="/admin/dashboard" element={<AdminRoute><>
                         <h1>Dashboard</h1>
-                        <Orders/>
+                        <OrdersAdminDash/>
                         <Activities/>
                         </></AdminRoute>} />
 
@@ -64,6 +71,8 @@ export default function App() {
       <Route path="/admin/settings/payment" element={<AdminRoute><PaymentTaxesPage /></AdminRoute>} />
       <Route path="/admin/settings/shipping" element={<AdminRoute><ShippingPage /></AdminRoute>} />
       <Route path="/admin/settings/api" element={<AdminRoute><ApiAccessPage /></AdminRoute>} />
+
+      <Route path="/support/dashboard" element={<SupportRoute><SupportDashboard /></SupportRoute>} />
 
   </Route>
 

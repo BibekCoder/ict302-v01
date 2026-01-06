@@ -52,68 +52,36 @@ export default function Login(){
 }
 
 return (
-    <div style={styles.page}>
-      <form onSubmit={handleSubmit} style={styles.card}>
-        <h2>Admin Login</h2>
-
-        {error && <p style={styles.error}>{error}</p>}
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={styles.input}
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-        />
-
-        <button disabled={loading} style={styles.button}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-    </div>
+    <div className="login-page">
+         <div className="login-card">
+           <h2 className="title">SORTEM</h2>
+           <p className="subtitle">Login to your account</p>
+   
+           <form onSubmit={handleSubmit}>
+             <input
+               type="text"
+               placeholder="Email or Username"
+               value={email}
+               onChange={(e) => setEmail(e.target.value)}
+             />
+   
+             <input
+               type="password"
+               placeholder="Password"
+               value={password}
+               onChange={(e) => setPassword(e.target.value)}
+             />
+   
+            <button disabled={loading} className ="login-button">{loading? "Logging in...": "Login"}</button>
+            {error && <p >{error}</p>}
+           </form>
+   
+           
+           </div>
+         </div>
+     
   );
 }
 
-const styles = {
-  page: {
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#f5f5f5",
-  },
-  card: {
-    width: "300px",
-    padding: "25px",
-    background: "#fff",
-    borderRadius: "8px",
-    boxShadow: "0 0 10px rgba(0,0,0,.1)",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
-  input: {
-    padding: "10px",
-    fontSize: "16px",
-  },
-  button: {
-    padding: "10px",
-    fontSize: "16px",
-    background: "#1976d2",
-    color: "white",
-    border: "none",
-    cursor: "pointer",
-  },
-  error: {
-    color: "red",
-    fontSize: "14px",
-  },
-};
+
+
