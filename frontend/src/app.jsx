@@ -70,11 +70,13 @@ export default function App() {
 
       <Route path="/admin/settings/payment" element={<AdminRoute><PaymentTaxesPage /></AdminRoute>} />
       <Route path="/admin/settings/shipping" element={<AdminRoute><ShippingPage /></AdminRoute>} />
-      <Route path="/admin/settings/api" element={<AdminRoute><ApiAccessPage /></AdminRoute>} />
-
-      <Route path="/support/dashboard" element={<SupportRoute><SupportDashboard /></SupportRoute>} />
+      <Route path="/admin/settings/api" element={<AdminRoute><ApiAccessPage /></AdminRoute>} /> 
 
   </Route>
+
+  <Route element={<SupportRoute />}>
+    <Route path="/support/dashboard" element={<SupportDashboard />} />
+</Route>
 
   {/*Default routes*/}
   <Route path="*" element={<Navigate to="/login" replace />} />

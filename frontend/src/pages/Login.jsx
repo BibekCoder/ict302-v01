@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import "@/css/login.css";
 
 const API_BASE= import.meta.env.VITE_API_BASE_URL;
 
@@ -34,13 +35,18 @@ export default function Login(){
       }
 
       const data= await res.json();
+      console.log("Login Response:",data);
       localStorage.setItem("email", JSON.stringify(data.email));
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role); // Store user role
      
       if (data.role === "admin"){
         navigate("/admin/dashboard");
-      }else{
+      }
+      else if (data.role === "support"){
+        navigate("/support/dashboard");
+      }
+      else{
         navigate("/unauthorized")
       }
   }catch (err){

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import OrderTable from "../components/OrderTable";
-import EmailModal from "../components/EmailModal";
+import OrderTable from "@/components/OrderTable";
+import EmailModal from "@/components/EmailModal";
 
 
 const sampleOrders = [
