@@ -1,6 +1,8 @@
+import "@/css/support.css";
 import { useMemo, useState } from "react";
 import OrderTable from "@/components/OrderTable";
 import EmailModal from "@/components/EmailModal";
+
 
 
 const sampleOrders = [
@@ -27,8 +29,11 @@ export default function SupportDashboard() {
     });
   }, [orders, search, status]);
 
+
+
   return (
-    <div className="page">
+   
+     <div className="page">
       <h2 className="title">Support Dashboard</h2>
 
       <div className="filters">
@@ -50,10 +55,14 @@ export default function SupportDashboard() {
         </select>
       </div>
 
+      {/*
       <OrderTable
         orders={filteredOrders}
         onEmailClick={(order) => setSelectedOrder(order)}
       />
+      */}
+      <pre>{JSON.stringify(filteredOrders, null, 2)}</pre>
+
 
       {selectedOrder && (
         <EmailModal
@@ -62,5 +71,5 @@ export default function SupportDashboard() {
         />
       )}
     </div>
-  );
+  ); 
 }

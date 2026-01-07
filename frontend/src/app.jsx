@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Unauthorized from "./pages/Unauthorized";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 
+
 import ordersDetailsSupport from "./components/orderDetailsSupport";
 import EmailModal from "./components/EmailModal";
 import SupportRoute from "./routes/SupportRoute";
@@ -74,10 +75,7 @@ export default function App() {
 
   </Route>
 
-  <Route element={<SupportRoute />}>
-    <Route path="/support/dashboard" element={<SupportDashboard />} />
-</Route>
-
+  <Route path="/support/dashboard" element ={<SupportRoute><SupportDashboard /></SupportRoute>} />
   {/*Default routes*/}
   <Route path="*" element={<Navigate to="/login" replace />} />
 </Routes>

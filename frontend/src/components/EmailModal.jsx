@@ -14,7 +14,7 @@ export default function EmailModal({ order, onClose }) {
   }
 
   return (
-    <div className="modalOverlay" onClick={onClose}>
+    <div className="modalBackdrop" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modalHeader">
           <h3>Send Email</h3>
