@@ -30,6 +30,8 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/customers", require("./routes/customer.routes"));
 app.use("/api/admin/users", userMgmtRoutes);
 app.use("/api/emails", emailRoutes);
+app.use("/api/email-logs", require("./routes/emailLogs.routes"));
+
 
 
  
