@@ -19,7 +19,7 @@ import EmailTemplatesPage from "./pages/admin/EmailTemplatesPage";
 import EmailConfigPage from "./pages/admin/EmailConfigPage";
 import DashboardPage from "./pages/admin/DashboardPage";
 import UsersPage from "./pages/admin/UsersPage";
-import ActivityLogsPage from "./pages/admin/ActivityLogsPage";
+import EmailLogsPage from "./pages/admin/EmailLogsPage";
 import SettingsGeneralPage from "./pages/admin/SettingsGeneralPage";
 import PaymentTaxesPage from "./pages/admin/PaymentTaxesPage";
 import ShippingPage from "./pages/admin/ShippingPage";
@@ -59,7 +59,14 @@ export default function App() {
       <Route path="/order/:id" element={<AdminRoute><OrderDetails /></AdminRoute>} />
                         
       <Route path="/admin/users" element={<AdminRoute><UsersPage /></AdminRoute>} />
-      <Route path="/admin/activity" element={<AdminRoute><ActivityLogsPage /></AdminRoute>} />
+      <Route
+  path="/admin/email-logs"
+  element={
+    <AdminRoute>
+      <EmailLogsPage />
+    </AdminRoute>
+  }
+/>
 
       <Route path="/admin/settings" element={<AdminRoute><SettingsGeneralPage /></AdminRoute>} />
       <Route path="/admin/settings/credentials" element={<AdminRoute><EmailConfigPage /></AdminRoute>} />
