@@ -7,5 +7,6 @@ const emailController = require("../controllers/emailController");
 
 router.post("/send", auth, role(["admin", "support"]), emailController.sendSingleEmail);
 router.post("/send-bulk", auth, role(["admin", "support"]), emailController.sendBulkEmail);
+router.post("/send-custom", auth, role(["admin", "support"]), emailController.sendCustomEmail);
 
 module.exports = router;

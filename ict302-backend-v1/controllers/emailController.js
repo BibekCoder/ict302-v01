@@ -190,4 +190,66 @@ exports.sendBulkEmail = async (req, res) => {
     results,
   });
 };
+exports.sendCustomEmail = async (req, res) => {
+  const { to, subject, body } = req.body;
+
+  if (!to || !subject || !body) {
+    return res.status(400).json({
+      message: "to, subject, and body are required",
+    });
+  }
+
+  try {
+    const result = await sendEmail({ to, subject, body, templateName: "custom" });
+
+    if (!result.success) {
+      await EmailLog.create({
+        to,
+        subject,
+        templateName: "custom",
+        status: "FAILED",
+        error: result.error,
+        sendAt: new Date(),
+      });
+
+      return res.status(500).json({
+        message: "Email failed",
+        error: result.error,
+      });
+    }
+
+    await EmailLog.create({
+      to,
+      subject,
+      templateName: "custom",
+      status: "SENT",
+      error: null,
+      sendAt: new Date(),
+    });
+
+    return res.json({
+      message: "Custom email sent successfully",
+      to,
+      subject,
+      templateName: "custom",
+      sendAt: new Date(),
+      previewUrl: result.previewUrl,
+    });
+  } catch (err) {
+    await EmailLog.create({
+      to,
+      subject,
+      templateName: "custom",
+      status: "FAILED",
+      error: err.message,
+      sendAt: new Date(),
+    });
+
+    return res.status(500).json({
+      message: "Unexpected error while sending custom email",
+      error: err.message,
+    });
+  }
+};
+
 
