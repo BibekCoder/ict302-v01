@@ -37,7 +37,7 @@ export default function Orders() {
     <div>
       <div className="section-header">
         <h2>Recent Orders</h2>
-        <span className="view-all">View All &gt;</span>
+        <button className="view-all">View All &gt;</button>
       </div>
 
       <div className="grid">
