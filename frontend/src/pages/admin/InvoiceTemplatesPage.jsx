@@ -54,10 +54,7 @@ export default function InvoiceTemplatesPage() {
               <textarea
                 className="protoTextarea"
                 defaultValue={
-`Invoice template editor (demo).
-
-You can show a real WYSIWYG editor later.
-For now this demonstrates navigation + UI structure.`
+`Invoice template editor. `
                 }
               />
             </div>

@@ -7,6 +7,8 @@ const authRoutes = require("./routes/auth.routes");
 const orderRoutes = require("./routes/order.routes");
 const userMgmtRoutes = require("./routes/user-mgmt.routes");
 const emailRoutes = require("./routes/emailRoutes");
+const templateRoutes = require("./routes/template.routes");
+
 // -----------------------------
 // MIDDLEWARES
 // -----------------------------
@@ -31,6 +33,8 @@ app.use("/api/customers", require("./routes/customer.routes"));
 app.use("/api/admin/users", userMgmtRoutes);
 app.use("/api/emails", emailRoutes);
 app.use("/api/email-logs", require("./routes/emailLogs.routes"));
+app.use("/api/templates", templateRoutes);
+
 
 
 

@@ -27,6 +27,8 @@ import ShippingPage from "./pages/admin/ShippingPage";
 import ApiAccessPage from "./pages/admin/ApiAccessPage";
 import InvoiceTemplatesPage from "./pages/admin/InvoiceTemplatesPage";
 import Orders from "./components/OrdersAdminDash";
+import ManualOrderPage from "./pages/admin/ManualOrderPage";
+import SendEmailPage from "./pages/admin/SendEmailPage";
 
 
 function Placeholder({ title }) {
@@ -79,6 +81,8 @@ export default function App() {
       <Route path="/admin/settings/payment" element={<AdminRoute><PaymentTaxesPage /></AdminRoute>} />
       <Route path="/admin/settings/shipping" element={<AdminRoute><ShippingPage /></AdminRoute>} />
       <Route path="/admin/settings/api" element={<AdminRoute><ApiAccessPage /></AdminRoute>} /> 
+<Route path="/admin/create-order" element={<ManualOrderPage />} />
+<Route path="/admin/send-email" element={<SendEmailPage />} />
 
   </Route>
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiGet } from "@/api/api";
+import { apiGet } from "../../api";
 
 export default function EmailLogsPage() {
   const [logs, setLogs] = useState([]);

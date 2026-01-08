@@ -23,4 +23,6 @@ router.put("/:id", auth, role(["support"]), orderController.updateOrderStatus);
 
 router.post("/new_customer",orderController.createOrderWithCustomer);
 module.exports = router;
+router.post("/manual", auth, role(["admin", "support"]), orderController.createManualOrder);
+router.get("/recent", auth, role(["admin", "support"]), orderController.getRecentOrders);
  
