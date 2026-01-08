@@ -1,16 +1,59 @@
-import { useState } from "react";
+import { sendSingleEmail } from "../api/email";
+import { useState,useEffect } from "react";
+import emailTemplates from "../utils/emailTemplates";
+
+
+
 
 export default function EmailModal({ order, onClose }) {
-  const [subject, setSubject] = useState(`Regarding your order ${order?.id}`);
-  const [message, setMessage] = useState("");
+ const [subject, setSubject] = useState("");
+ const [isSending, setIsSending] = useState(false);
+  //const [message, setMessage] = useState("");
+  const [templateName, setTemplateName] = useState("orderConfirmation");
+  const [preview, setPreview] = useState("");
 
-  function handleSend() {
-    // For now we are NOT sending a real email (backend will do that later).
-    // This proves the feature works in frontend.
-    alert(
-      `Email sent!\n\nTo: ${order.email}\nSubject: ${subject}\nMessage: ${message}`
+  useEffect(() => {
+  if (!templateName) return;
+
+  const templateFn = emailTemplates[templateName];
+  if (!templateFn) return;
+
+  const result = templateFn({
+    customerName: order.customer,
+    orderId: order.id.replace("#", ""),
+  });
+
+  setSubject(result.subject);
+  setPreview(result.body);
+}, [templateName, order]);
+
+
+  async function handleSend() {
+    if (isSending) return;
+     try {
+      setIsSending(true);
+    const token = localStorage.getItem("token");
+
+    await sendSingleEmail(
+      {
+        to: order.email,
+        templateName: "followUpMessage",
+        data: {
+          customerName: order.customer,
+          orderId: order.id.replace("#", ""),
+        },
+      },
+      token
     );
+
+    alert("Email sent successfully");
     onClose();
+  } catch (err) {
+    alert(err.message || "Failed to send email");
+  }finally{
+    setIsSending(false);
+  }
+
   }
 
   return (
@@ -35,23 +78,36 @@ export default function EmailModal({ order, onClose }) {
           </div>
 
           <label className="field">
-            <span className="label">Subject</span>
-            <input
+            <span className="label">Template</span>
+            <select
               className="input"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder="Enter subject"
-            />
+              value={templateName}
+              onChange={(e) => setTemplateName(e.target.value)}
+              placeholder="Enter templateName"
+            >
+               {Object.keys(emailTemplates).map((key) => (
+              <option key={key} value={key}>
+                {key}
+                </option>
+              ))}
+
+            </select>
           </label>
+          
+          
+        <div className="modalBody">
+          <div className="row">
+            <span className="label">Subject</span>
+            <span className="value">{subject || "No subject" }</span>
+          </div>
+        </div>
 
           <label className="field">
             <span className="label">Message</span>
             <textarea
               className="textarea"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Write your message..."
-              rows={6}
+              value={preview}
+              readOnly
             />
           </label>
         </div>
@@ -60,17 +116,14 @@ export default function EmailModal({ order, onClose }) {
           <button className="btn ghost" onClick={onClose}>
             Cancel
           </button>
+
           <button
+          disabled={isSending}
             className="btn primary"
             onClick={handleSend}
-            disabled={!subject.trim() || !message.trim()}
-            title={
-              !subject.trim() || !message.trim()
-                ? "Please fill subject and message"
-                : "Send Email"
-            }
+            style={{ opacity: isSending ? 0.6 : 1 }}
           >
-            Send Email
+            {isSending? "Sending email...": "Send Email"}
           </button>
         </div>
       </div>

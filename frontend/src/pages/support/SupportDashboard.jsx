@@ -34,7 +34,7 @@ export default function SupportDashboard() {
 
 
 
-      <OrderTableSupport
+      <OrderTable
         onEmailClick={(order) => setSelectedOrder(order)}
       />
       
