@@ -13,7 +13,7 @@ import ordersDetailsSupport from "./components/orderDetailsSupport";
 import EmailModal from "./components/EmailModal";
 import SupportRoute from "./routes/SupportRoute";
 import SupportDashboard from "./pages/support/SupportDashboard";
-import OrderTable from "./components/OrderTable";
+import OrderTableSupport from "./components/OrderTableSupport";
 
 import CustomizeTemplatesPage from "./pages/admin/CustomizeTemplatesPage";
 import EmailTemplatesPage from "./pages/admin/EmailTemplatesPage";

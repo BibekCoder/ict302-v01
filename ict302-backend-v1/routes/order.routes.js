@@ -10,7 +10,7 @@ const orderController = require("../controllers/order.controller");
 //const  = [auth, role(["support", "admin"])];
 
 // GET /api/orders
-router.get("/",auth,role([ "admin"]),orderController.getAllOrders);
+router.get("/",auth,role(["support", "admin"]),orderController.getAllOrders);
 
 // GET /api/orders/:id
 router.get("/:id",auth,role(["support", "admin"]),orderController.getOrderById);
