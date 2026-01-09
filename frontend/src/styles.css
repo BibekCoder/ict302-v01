@@ -535,11 +535,5 @@ button {
   border-radius: 20px;
   cursor: pointer;
 }
-.view-all {
-  color: blue;
-  text-decoration: underline;
-  font-weight: bold;
-  cursor: pointer;
-}
 
 
