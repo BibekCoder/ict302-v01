@@ -9,6 +9,7 @@ import Unauthorized from "./pages/Unauthorized";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 
 
+import RecentEmails from "./components/RecentEmails";
 import ordersDetailsSupport from "./components/orderDetailsSupport";
 import EmailModal from "./components/EmailModal";
 import SupportRoute from "./routes/SupportRoute";
@@ -57,7 +58,8 @@ export default function App() {
       <Route path="/admin/dashboard" element={<AdminRoute><>
                         <h1>Dashboard</h1>
                         <OrdersAdminDash/>
-                        <Activities/>
+                        <RecentEmails/>
+                        
                         </></AdminRoute>} />
       <Route path="/admin/orders" element={<AdminRoute><AdminOrdersPage /></AdminRoute>} />
 

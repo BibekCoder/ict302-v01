@@ -41,7 +41,7 @@ export default function Orders() {
       </div>
 
       <div className="grid">
-        {orders.map((order) => (
+        {orders.slice(0, 4).map((order) => (
           <div className="card" key={order.orderId}>
             <h3>Order #{order.orderId}</h3>
             <p>Customer: {order.Customer?.customerName ?? "-"}</p>
