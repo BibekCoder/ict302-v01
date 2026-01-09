@@ -85,6 +85,7 @@ export default function OrderTable({ onEmailClick }) {
                 <td>{o.date}</td>
                 <td>{o.total}</td>
                 <td>
+                
                   <button className="btn" onClick={() => onEmailClick(o)}>
                     Send Email
                   </button>

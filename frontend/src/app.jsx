@@ -29,6 +29,7 @@ import InvoiceTemplatesPage from "./pages/admin/InvoiceTemplatesPage";
 import Orders from "./components/OrdersAdminDash";
 import ManualOrderPage from "./pages/admin/ManualOrderPage";
 import SendEmailPage from "./pages/admin/SendEmailPage";
+import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
 
 
 function Placeholder({ title }) {
@@ -58,6 +59,7 @@ export default function App() {
                         <OrdersAdminDash/>
                         <Activities/>
                         </></AdminRoute>} />
+      <Route path="/admin/orders" element={<AdminRoute><AdminOrdersPage /></AdminRoute>} />
 
       <Route path="/order/:id" element={<AdminRoute><OrderDetails /></AdminRoute>} />
                         
