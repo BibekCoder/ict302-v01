@@ -46,6 +46,9 @@ export default function Login(){
       else if (data.role === "support"){
         navigate("/support/dashboard");
       }
+      else if (data.role === "founder"){
+        navigate("/founder/reports");
+      }
       else{
         navigate("/unauthorized")
       }
