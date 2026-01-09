@@ -32,6 +32,12 @@ import ManualOrderPage from "./pages/admin/ManualOrderPage";
 import SendEmailPage from "./pages/admin/SendEmailPage";
 import AdminOrdersPage from "./pages/admin/AdminOrdersPage";
 
+import FounderLayout from "./layouts/FounderLayout";
+import FounderDashboard from "./pages/founder/FounderDashboard";
+import OrderReports from "./pages/founder/OrderReports";
+import SystemSettings from "./pages/founder/SystemSettings";
+
+
 
 function Placeholder({ title }) {
   return (
@@ -85,15 +91,18 @@ export default function App() {
       <Route path="/admin/settings/payment" element={<AdminRoute><PaymentTaxesPage /></AdminRoute>} />
       <Route path="/admin/settings/shipping" element={<AdminRoute><ShippingPage /></AdminRoute>} />
       <Route path="/admin/settings/api" element={<AdminRoute><ApiAccessPage /></AdminRoute>} /> 
-<Route path="/admin/create-order" element={<ManualOrderPage />} />
-<Route path="/admin/send-email" element={<SendEmailPage />} />
-
-  </Route>
+     </Route>
 
   <Route path="/support/dashboard" element ={<SupportRoute><SupportDashboard /></SupportRoute>} />
+
+  <Route element={<FounderLayout />}>
+     <Route path="/founder/reports" element={<OrderReports/>}/>
+  </Route>
   {/*Default routes*/}
   <Route path="*" element={<Navigate to="/login" replace />} />
+
 </Routes>
+
 
 </> 
   );
