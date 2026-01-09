@@ -26,17 +26,33 @@ export default function OrderReports() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const token = localStorage.getItem("token");
+  
+
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        const data = await apiGet("/api/orders", token);
-        
-        // Handle both array and object responses
-        const orders = Array.isArray(data) ? data : data.orders || [];
-        setAllOrders(orders);
+        const token = localStorage.getItem("token");
+        const data = await apiGet("/api/orders",token);
+
+        const normalized = (data.orders || []).map((o) => ({
+          orderId: o.orderId,
+          orderDate: o.orderDate,
+          customerName: o.Customer?.customerName || "—",
+          email: o.Customer?.customerEmail || "",
+          productName: o.Product?.productName || o.productName || "—",
+          quantity: o.quantity || 1,
+          status:
+            o.status === "delivered"
+              ? "Completed"
+              : "Pending",
+          totalPrice: o.totalPrice || 0,
+          orderNotes: o.orderNotes || "",
+          customerId: o.customerId || o.Customer?.customerId || "—",
+          raw: o, // keep original if needed later
+        }));
+        setAllOrders(normalized);
         setError(null);
       } catch (err) {
         console.error("Failed to fetch orders:", err);
@@ -48,7 +64,7 @@ export default function OrderReports() {
     };
 
     fetchOrders();
-  }, [token]);
+  }, []);
 
   const filteredOrders = useMemo(() => {
     return allOrders.filter((o) => inRange(o.orderDate, startDate, endDate));
@@ -60,14 +76,14 @@ export default function OrderReports() {
 
   function downloadExcel() {
     const rows = filteredOrders.map((o) => ({
-      orderId: o.orderId,
-      orderDate: formatDate(o.orderDate),
-      customerId: o.customerId,
-      productName: o.productName,
-      quantity: o.quantity,
-      totalPrice: o.totalPrice,
-      status: o.status,
-      orderNotes: o.orderNotes,
+      "Order ID": o.orderId,
+      "Order Date": formatDate(o.orderDate),
+      "Customer Name": o.customerName,
+      "Product": o.productName,
+      "Quantity": o.quantity,
+      "Total Price": o.totalPrice,
+      "Status": o.status,
+      "Notes": o.orderNotes,
     }));
 
     const ws = XLSX.utils.json_to_sheet(rows);
@@ -92,11 +108,11 @@ export default function OrderReports() {
 
     autoTable(doc, {
       startY: 44,
-      head: [["Order ID", "Order Date", "Customer ID", "Product", "Qty", "Total", "Status", "Notes"]],
+      head: [["Order ID", "Order Date", "Customer Name", "Product", "Qty", "Total", "Status", "Notes"]],
       body: filteredOrders.map((o) => [
         o.orderId,
         formatDate(o.orderDate),
-        o.customerId,
+        o.customerName,
         o.productName,
         o.quantity,
         `$${Number(o.totalPrice).toFixed(2)}`,
@@ -147,23 +163,11 @@ export default function OrderReports() {
       {/* Header row like "Recent Orders" + View All */}
       <div className="rowBetween">
         <div>
-          <div className="sectionTitle">Recent Orders</div>
+          <div className="sectionTitle">All Orders</div>
           <div className="mutedText">
             Select a date range and download report (PDF/Excel).
           </div>
         </div>
-
-        <button
-          type="button"
-          className="linkBtn"
-          onClick={() => {
-            setStartDate("");
-            setEndDate("");
-          }}
-          title="Clear filters"
-        >
-          View All &gt;
-        </button>
       </div>
 
       {/* Filter Card */}
@@ -189,8 +193,20 @@ export default function OrderReports() {
             />
           </div>
 
+          <button
+          type="button"
+          className="pillBtn"
+          onClick={() => {
+            setStartDate("");
+            setEndDate("");
+          }}
+          title="Clear filters"
+        >
+          Clear Filters
+        </button>
+
           <div className="actions">
-            <button className="btnOutline" onClick={downloadExcel}>
+            <button className="pillBtn" onClick={downloadExcel}>
               Download Excel
             </button>
             <button className="pillBtn" onClick={downloadPDF}>
@@ -219,7 +235,7 @@ export default function OrderReports() {
               <tr>
                 <th>Order ID</th>
                 <th>Order Date</th>
-                <th>Customer ID</th>
+                <th>Customer Name</th>
                 <th>Product</th>
                 <th>Qty</th>
                 <th>Total</th>
@@ -240,7 +256,7 @@ export default function OrderReports() {
                   <tr key={o.orderId}>
                     <td className="mono">{o.orderId}</td>
                     <td className="mono">{formatDate(o.orderDate)}</td>
-                    <td className="mono">{o.customerId}</td>
+                    <td className="mono">{o.customerName}</td>
                     <td>{o.productName}</td>
                     <td className="mono">{o.quantity}</td>
                     <td className="mono">${Number(o.totalPrice).toFixed(2)}</td>
