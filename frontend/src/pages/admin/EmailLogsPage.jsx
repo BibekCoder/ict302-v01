@@ -74,8 +74,17 @@ export default function EmailLogsPage() {
                   {log.subject}
                 </div>
                 {log.error && (
-                  <div style={{ color: "#b00020", marginTop: 6 }}>
-                    {log.error}
+                  <div style={{ marginTop: 6 }}>
+                    <a 
+                      href={log.error} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{ color: "#0066cc", textDecoration: "none", cursor: "pointer" }}
+                      onMouseEnter={(e) => e.target.style.textDecoration = "underline"}
+                      onMouseLeave={(e) => e.target.style.textDecoration = "none"}
+                    >
+                      View Preview
+                    </a>
                   </div>
                 )}
               </div>
