@@ -34,14 +34,14 @@ export default function Orders() {
   if (error) return <div className="card">Error: {error}</div>;
 
   return (
-    <div>
+    <div className="ro-section">
       <div className="section-header">
         <h2>Recent Orders</h2>
         <button onClick={() => navigate("/admin/orders")}>View All &gt;</button>
       </div>
 
       <div className="grid">
-        {orders.slice(0, 4).map((order) => (
+        {orders.slice(0, 6).map((order) => (
           <div className="card" key={order.orderId}>
             <h3>Order #{order.orderId}</h3>
             <p>Customer: {order.Customer?.customerName ?? "-"}</p>

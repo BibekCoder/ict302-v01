@@ -62,7 +62,7 @@ export default function App() {
   <Route element={<AdminRoute><ProtectedLayout /></AdminRoute>}>
 
       <Route path="/admin/dashboard" element={<AdminRoute><>
-                        <h1>Dashboard</h1>
+                        <h1 style={{fontSize: "42px", fontWeight: "900"}}>Dashboard</h1>
                         <OrdersAdminDash/>
                         <RecentEmails/>
                         
@@ -91,6 +91,8 @@ export default function App() {
       <Route path="/admin/settings/payment" element={<AdminRoute><PaymentTaxesPage /></AdminRoute>} />
       <Route path="/admin/settings/shipping" element={<AdminRoute><ShippingPage /></AdminRoute>} />
       <Route path="/admin/settings/api" element={<AdminRoute><ApiAccessPage /></AdminRoute>} /> 
+      <Route path="/admin/create-order" element={<AdminRoute><ManualOrderPage /></AdminRoute>} />
+      <Route path="/admin/send-email" element={<AdminRoute><SendEmailPage /></AdminRoute>} />
      </Route>
 
   <Route path="/support/dashboard" element ={<SupportRoute><SupportDashboard /></SupportRoute>} />

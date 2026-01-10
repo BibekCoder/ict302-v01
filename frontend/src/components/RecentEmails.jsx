@@ -37,14 +37,14 @@ if (loading) return <div className="card">Loading email logs…</div>;
 if (error) return <div className="card">Error: {error}</div>;
 return (
 
-    <div>
+    <div className="re-section">
         <div className="section-header">
             <h2>Recent Emails</h2>
             <button onClick={() => navigate("/admin/email-logs")}>View All &gt;  </button>
         </div>
 
         <div className="grid">
-            {logs.slice(0,4).map((log) => (
+            {logs.slice(0,6).map((log) => (
                 <div className="card" key={log.logId}>
                     <h3>To: {log.to}</h3>
                     <p>Subject: {log.subject}</p>

@@ -36,7 +36,7 @@ a:hover{ text-decoration:underline; }
 .topbar{
   background:var(--orange);
   color:#fff;
-  padding: 16px 20px;
+  font-weight: 500;
 }
 
 .topbarInner{
@@ -44,6 +44,7 @@ a:hover{ text-decoration:underline; }
   align-items:center;
   justify-content:space-between;
   gap:16px;
+  font-weight: 200;
 }
 
 .brand{
@@ -293,6 +294,25 @@ a:hover{ text-decoration:underline; }
   color:#fff;
   border-color: var(--red);
 }
+.primaryBtn{
+  background: var(--blue);
+  color:#fff;
+  border:none;
+  padding: 12px 20px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:18px;
+  cursor:pointer;
+}
+.secondaryBtn{
+  background: var(--btnGrey);
+  border:none;
+  padding: 12px 20px;
+  border-radius:12px;
+  font-weight:900;
+  font-size:18px;
+  cursor:pointer;
+}
 
 .backArrow{
   font-size:36px;
@@ -537,3 +557,9 @@ button {
 }
 
 
+.ro-section{
+  background-color: lightgray;
+}
+.re-section{
+  background-color: ghostwhite;
+}
