@@ -13,7 +13,9 @@ export default function SendEmailPage() {
   const [orders, setOrders] = useState([]);
   const [selectedOrderId, setSelectedOrderId] = useState("");
 
-  const [to, setTo] = useState("");
+  // ✅ MULTI-RECIPIENTS (replaces single "to")
+  const [recipients, setRecipients] = useState([""]);
+
   const [templateName, setTemplateName] = useState("");
   const [templateDataJson, setTemplateDataJson] = useState(
     JSON.stringify({ customerName: "", orderId: 0 }, null, 2)
@@ -42,10 +44,36 @@ export default function SendEmailPage() {
 
   // Helpers: update internal JSON without showing it
   const patchTemplateData = (patch) => {
-    const current = parsedTemplateData && typeof parsedTemplateData === "object" ? parsedTemplateData : {};
+    const current =
+      parsedTemplateData && typeof parsedTemplateData === "object"
+        ? parsedTemplateData
+        : {};
     const next = { ...current, ...patch };
     setTemplateDataJson(JSON.stringify(next, null, 2));
   };
+
+  // ✅ Recipients helpers
+  const updateRecipient = (index, value) => {
+    setRecipients((prev) => prev.map((r, i) => (i === index ? value : r)));
+  };
+
+  const addRecipient = () => {
+    setRecipients((prev) => [...prev, ""]);
+  };
+
+  const removeRecipient = (index) => {
+    setRecipients((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const hasAtLeastOneRecipient = useMemo(() => {
+    return recipients.some((r) => String(r || "").trim().length > 0);
+  }, [recipients]);
+
+  const cleanedRecipients = useMemo(() => {
+    return recipients
+      .map((r) => String(r || "").trim())
+      .filter((r) => r.length > 0);
+  }, [recipients]);
 
   // Load templates
   useEffect(() => {
@@ -89,7 +117,7 @@ export default function SendEmailPage() {
     loadOrders();
   }, []);
 
-  // When order selected → ONLY in template mode: auto-fill "to" + internal template data
+  // When order selected → ONLY in template mode: auto-fill recipients[0] + internal template data
   useEffect(() => {
     if (mode !== "template") return;
     if (!selectedOrderId) return;
@@ -101,7 +129,14 @@ export default function SendEmailPage() {
     const customerName = o?.Customer?.customerName || o?.customerName || "";
     const orderId = o?.orderId || "";
 
-    if (customerEmail) setTo(customerEmail);
+    // ✅ Put customer email into first recipient slot (keeps any extra recipients)
+    if (customerEmail) {
+      setRecipients((prev) => {
+        const next = [...prev];
+        next[0] = customerEmail;
+        return next;
+      });
+    }
 
     // shape internal template data based on templateName
     const base = { customerName, orderId };
@@ -123,8 +158,10 @@ export default function SendEmailPage() {
 
     let next = { customerName, orderId };
 
-    if (templateName === "orderShipped") next = { ...next, trackingNumber: parsedTemplateData.trackingNumber || "" };
-    if (templateName === "orderUpdated") next = { ...next, status: parsedTemplateData.status || "processing" };
+    if (templateName === "orderShipped")
+      next = { ...next, trackingNumber: parsedTemplateData.trackingNumber || "" };
+    if (templateName === "orderUpdated")
+      next = { ...next, status: parsedTemplateData.status || "processing" };
     if (templateName === "supportMessage") next = { message: parsedTemplateData.message || "" };
 
     setTemplateDataJson(JSON.stringify(next, null, 2));
@@ -132,10 +169,10 @@ export default function SendEmailPage() {
   }, [templateName, mode]);
 
   const canSend = useMemo(() => {
-    if (!to) return false;
+    if (!hasAtLeastOneRecipient) return false;
     if (mode === "template") return !!templateName;
     return !!customSubject && !!customBody;
-  }, [to, mode, templateName, customSubject, customBody]);
+  }, [hasAtLeastOneRecipient, mode, templateName, customSubject, customBody]);
 
   // Live preview for template mode
   useEffect(() => {
@@ -147,7 +184,6 @@ export default function SendEmailPage() {
       if (mode !== "template") return;
       if (!templateName) return;
 
-      // If JSON is invalid (shouldn’t happen now), show error
       if (!parsedTemplateData || typeof parsedTemplateData !== "object") {
         setPreviewError("Template data is invalid.");
         return;
@@ -171,7 +207,7 @@ export default function SendEmailPage() {
     };
 
     runPreview();
-  }, [mode, templateName, templateDataJson]); // templateDataJson changes via patchTemplateData
+  }, [mode, templateName, templateDataJson]);
 
   const sendEmail = async () => {
     setResult(null);
@@ -185,37 +221,71 @@ export default function SendEmailPage() {
 
     try {
       if (mode === "template") {
-        const res = await apiPost(
-          "/api/emails/send",
-          { to, templateName, data: parsedTemplateData },
-          token
-        );
+        // ✅ safest for demo: send one-by-one using existing endpoint
+        const perRecipientResults = [];
 
-        if (res?.message?.toLowerCase().includes("success")) {
-          setResult({
-            ok: true,
-            message: res.message,
-            previewUrl: res.previewUrl || null,
+        for (const email of cleanedRecipients) {
+          const res = await apiPost(
+            "/api/emails/send",
+            { to: email, templateName, data: parsedTemplateData },
+            token
+          );
+
+          perRecipientResults.push({
+            to: email,
+            ok: !!res?.message?.toLowerCase().includes("success"),
+            message: res?.message || "",
+            error: res?.error || null,
+            previewUrl: res?.previewUrl || null,
           });
-        } else {
-          setResult({ ok: false, message: res.message || "Email failed", error: res.error || null });
         }
+
+        const successCount = perRecipientResults.filter((x) => x.ok).length;
+        const failCount = perRecipientResults.length - successCount;
+        const firstPreview = perRecipientResults.find((x) => x.previewUrl)?.previewUrl || null;
+
+        setResult({
+          ok: failCount === 0,
+          message:
+            failCount === 0
+              ? `Email sent successfully to ${successCount} recipient(s).`
+              : `Sent: ${successCount}, Failed: ${failCount} (check errors below).`,
+          previewUrl: firstPreview,
+          results: perRecipientResults,
+        });
       } else {
-        const res = await apiPost(
-          "/api/emails/send-custom",
-          { to, subject: customSubject, body: customBody },
-          token
-        );
+        // custom email: send one-by-one using existing endpoint
+        const perRecipientResults = [];
 
-        if (res?.message?.toLowerCase().includes("success")) {
-          setResult({
-            ok: true,
-            message: res.message,
-            previewUrl: res.previewUrl || null,
+        for (const email of cleanedRecipients) {
+          const res = await apiPost(
+            "/api/emails/send-custom",
+            { to: email, subject: customSubject, body: customBody },
+            token
+          );
+
+          perRecipientResults.push({
+            to: email,
+            ok: !!res?.message?.toLowerCase().includes("success"),
+            message: res?.message || "",
+            error: res?.error || null,
+            previewUrl: res?.previewUrl || null,
           });
-        } else {
-          setResult({ ok: false, message: res.message || "Email failed", error: res.error || null });
         }
+
+        const successCount = perRecipientResults.filter((x) => x.ok).length;
+        const failCount = perRecipientResults.length - successCount;
+        const firstPreview = perRecipientResults.find((x) => x.previewUrl)?.previewUrl || null;
+
+        setResult({
+          ok: failCount === 0,
+          message:
+            failCount === 0
+              ? `Email sent successfully to ${successCount} recipient(s).`
+              : `Sent: ${successCount}, Failed: ${failCount} (check errors below).`,
+          previewUrl: firstPreview,
+          results: perRecipientResults,
+        });
       }
     } catch (err) {
       setResult({ ok: false, message: "Request failed.", error: err.message });
@@ -281,13 +351,41 @@ export default function SendEmailPage() {
             </>
           )}
 
-          {/* ✅ Always show To box (custom wants ONLY this + subject/body) */}
-          <input
-            className="input"
-            placeholder={mode === "custom" ? "Enter recipient email (to) *" : "Recipient email (to) *"}
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-          />
+          {/* ✅ Recipients UI (works for BOTH template and custom) */}
+          <div style={{ fontWeight: 900, fontSize: 16 }}>
+            {mode === "custom" ? "Recipients (to) *" : "Recipient(s) (to) *"}
+          </div>
+
+          {recipients.map((email, i) => (
+            <div key={i} style={{ display: "flex", gap: 8 }}>
+              <input
+                className="input"
+                placeholder="recipient@email.com"
+                value={email}
+                onChange={(e) => updateRecipient(i, e.target.value)}
+                style={{ flex: 1 }}
+              />
+              {recipients.length > 1 && (
+                <button
+                  type="button"
+                  className="secondaryBtn"
+                  onClick={() => removeRecipient(i)}
+                  title="Remove recipient"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          ))}
+
+          <button
+            type="button"
+            className="secondaryBtn"
+            onClick={addRecipient}
+            style={{ width: "fit-content" }}
+          >
+            + Add recipient
+          </button>
 
           {mode === "template" && (
             <>
@@ -414,6 +512,22 @@ export default function SendEmailPage() {
                     </a>
                   </div>
                 )}
+
+                {/* Optional per-recipient report (helpful for demo) */}
+                {Array.isArray(result.results) && result.results.length > 1 && (
+                  <div style={{ marginTop: 12 }}>
+                    <div style={{ fontWeight: 900, marginBottom: 6 }}>Recipients</div>
+                    <div style={{ display: "grid", gap: 6 }}>
+                      {result.results.map((r) => (
+                        <div key={r.to} style={{ fontSize: 14 }}>
+                          <span style={{ fontWeight: 800 }}>{r.to}</span>{" "}
+                          — {r.ok ? "✅ Sent" : "❌ Failed"}
+                          {r.error ? <span style={{ color: "#b00020" }}> — {r.error}</span> : null}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -422,4 +536,3 @@ export default function SendEmailPage() {
     </div>
   );
 }
-
